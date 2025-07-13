@@ -72,7 +72,7 @@ public class MyServerHandler extends ChannelInboundHandlerAdapter {
             responseMessage = "Error: " + e.getMessage(); // 에러 발생 시 에러 메시지를 응답으로 설정
         }
         // 3. 모든 로직이 끝난 후, 최종 결과물을 클라이언트로 전송
-        ctx.writeAndFlush(Unpooled.copiedBuffer(responseMessage, CharsetUtil.UTF_8));
+        ctx.writeAndFlush(Unpooled.copiedBuffer(responseMessage + "\n", CharsetUtil.UTF_8));
     }
 
     @Override
