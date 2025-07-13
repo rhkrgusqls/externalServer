@@ -21,10 +21,10 @@ public class MyServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        ByteBuf in = (ByteBuf) msg;
-        String fullCommand = in.toString(CharsetUtil.UTF_8);
-
-        System.out.println("사용자에게로 부터 받은 응답 : " + fullCommand);
+//        ByteBuf in = (ByteBuf) msg;
+//        String fullCommand = in.toString(CharsetUtil.UTF_8);
+        String fullCommand = (String) msg;
+        System.out.println("사용자에게로 부터 받은 메시지 : " + fullCommand);
 
         String responseMessage; // 최종 응답 메시지를 담을 변수
 

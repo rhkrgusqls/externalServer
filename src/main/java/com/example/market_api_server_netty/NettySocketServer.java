@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import io.netty.handler.codec.LineBasedFrameDecoder;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.util.CharsetUtil;
 
 
 @Component
@@ -24,11 +27,13 @@ public class NettySocketServer {
 
     @PostConstruct
     public void start() throws InterruptedException {
-        // 1. SSL 컨텍스트 생성 코드 추가
         bossGroup = new NioEventLoopGroup(1);
         workerGroup = new NioEventLoopGroup();
 
+        // ServerBootstrap 객체 생성
         ServerBootstrap bootstrap = new ServerBootstrap();
+
+        // bootstrap에 모든 설정을 점(.)으로 연결하여 연쇄적으로 호출.
         bootstrap.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
                 .option(ChannelOption.SO_BACKLOG, 128)
@@ -37,14 +42,13 @@ public class NettySocketServer {
                     @Override
                     protected void initChannel(SocketChannel ch) {
                         ChannelPipeline pipeline = ch.pipeline();
-                        // SSL/TLS 핸들러 추가 가능 (필요시)
-                        // pipeline.addLast(sslCtx.newHandler(ch.alloc()));
 
-                        // 필요한 디코더/인코더 추가 가능
-                        // pipeline.addLast(new StringDecoder(CharsetUtil.UTF_8));
-                        // pipeline.addLast(new StringEncoder(CharsetUtil.UTF_8));
+                        // 클라이언트가 보내는 메시지를 처리하기 위한 디코더 추가
+                        pipeline.addLast(new LineBasedFrameDecoder(8192));
+                        pipeline.addLast(new StringDecoder(CharsetUtil.UTF_8));
 
-                        pipeline.addLast(new MyServerHandler()); // 실제 비즈니스 로직 핸들러
+                        // 실제 비즈니스 로직 핸들러
+                        pipeline.addLast(new MyServerHandler());
                     }
                 });
 
