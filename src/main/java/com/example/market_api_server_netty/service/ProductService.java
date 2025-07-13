@@ -20,7 +20,7 @@ public class ProductService {
         System.out.println("params : " + params);
         System.out.println("token " + token);
 
-        // TODO: 상품 검색은 로그인이 필수인 기능인지 정책 결정이 필요합니다.
+        // TODO: 상품 검색은 로그인이 필수인 기능인지 정책 결정이 필요
         //  만약 로그인이 필수라면 아래 토큰 검증 로직을 사용하고,
         //  선택적이라면 토큰이 있을 때만 검증하고 사용자별 추천 로직 등을 추가할 수 있습니다.
         //  여기서는 토큰이 필수라고 가정하고 구현합니다.
