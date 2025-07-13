@@ -12,7 +12,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unllable = false) // 'name' 컬럼은 null 값을 허용하지 않습니다.
+    @Column(nullable = false) // 'name' 컬럼은 null 값을 허용하지 않음.
     private String name;
 
     private String imageUrl;
