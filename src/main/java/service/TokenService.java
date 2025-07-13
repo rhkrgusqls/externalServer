@@ -28,7 +28,7 @@ public class TokenService {
         // TODO: [중요] 실제 프로덕션 환경에서는 애플리케이션 재시작 시에도 동일한 키를 유지해야함
         // KeyStore(JKS)나 PEM파일 등 안전한 외부 저장소에서 비공개키/공개키를 불러와야 함
         // 현재는 서버시작 시 마다 새로운 RSA 키 페어를 임시로 생성
-        this.keyPair = Keys.keyPairFor(Jwts.SIG.RS256);
+        this.keyPair = Jwts.SIG.RS256.keyPair().build();
         System.out.println("임시 RSA 키페어 생성, 프로덕션에서는 외부키를 사용하세요.");
     }
 
