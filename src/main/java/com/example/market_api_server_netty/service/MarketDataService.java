@@ -14,31 +14,6 @@ public class MarketDataService {
         this.tokenService = tokenService;
     }
 
-    public String getMarketData(Map<String, String> params, String token) {
-        System.out.println("Executing getMarketData with params: " + params + " token: " + token);
-
-        // TODO : 토큰 검증 실패시, 종류에 따라 다른 에러 코드를 반환하는 것도 좋다고 함
-        try{
-            if(token == null || token.isBlank()){
-                return "Error:Missing token"; // 토큰이 null일시 출력
-            }
-            // TokenService를 사용하여 토큰 검증
-            Claims claims = tokenService.validateAndGetClaims(token);
-            String userIdFromToken = claims.getSubject();
-            System.out.println("접속 유저에 대한 토큰 인증이 성공적으로 마쳤습니다." + userIdFromToken);
-        } catch(IllegalArgumentException e){
-            //validateAndGetClaims에서 발생한 모든 예외(만료, 형식 오루 등) 처리
-            return "Error: " + e.getMessage();
-        }
-        String item = params.get("item");
-        if(item == null || item.isBlank()){
-            return "Error:item을 찾지 못했습니다.";
-        }
-        // TODO: 이 부분에서 DB에 접근하여 실제 시장 데이터를 조회해야함.
-        String mockMarketData = "Market data for " + item + " is 10000 USD.";
-        return "OK:" + mockMarketData;
-    }
-
     public String getAccessToken(Map<String, String> params) {
         System.out.println("Executing getAccessToken with params: " + params);
         String userId = params.get("userId");

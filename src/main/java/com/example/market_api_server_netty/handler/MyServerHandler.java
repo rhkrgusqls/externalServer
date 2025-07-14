@@ -52,10 +52,6 @@ public class MyServerHandler extends ChannelInboundHandlerAdapter {
             // 2. 파싱된 명령에 따라 실제 비즈니스 로직(서비스) 호출
 
             switch (commandCode) {
-                case "GET_MARKET_DATA": // 토큰이 유효하면, 상품명(item) 정보를 마켓 데이터를 반환
-                    MarketDataService marketService = BeanUtil.getBean(MarketDataService.class);
-                    responseMessage = marketService.getMarketData(dataMap, token);
-                    break;
                 case "GET_ACCESS_TOKEN": // userId를 받아서 임시 토큰을 발급
                     MarketDataService accessService = BeanUtil.getBean(MarketDataService.class);
                     responseMessage = accessService.getAccessToken(dataMap);
