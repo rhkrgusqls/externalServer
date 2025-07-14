@@ -65,6 +65,10 @@ public class MyServerHandler extends ChannelInboundHandlerAdapter {
                     ProductService productService = BeanUtil.getBean(ProductService.class);
                     responseMessage = productService.searchProducts(dataMap, token);
                     break;
+                case "SearchData":
+                    ProductService detailService = BeanUtil.getBean(ProductService.class);
+                    responseMessage = detailService.getProductDetails(dataMap, token);
+                    break;
                 default:
                     responseMessage = "Error : 알수 없는 명령어 입니다. : "+ commandCode;
             }

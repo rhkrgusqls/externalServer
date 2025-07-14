@@ -3,6 +3,7 @@ package com.example.market_api_server_netty.service;
 import com.example.market_api_server_netty.domain.Product;
 import com.example.market_api_server_netty.repository.ProductRepository;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,8 +25,47 @@ public class ProductService {
         this.tokenService = tokenService;
         this.productRepository = productRepository;
     }
+    @Transactional
+    public String getProductDetails(Map<String, String> params, String token){
+        System.out.println("getProductDetails() 호출됨 (DB연동 버전)");
+        try{
+            if(token == null || token.isBlank()){
+                return "Error : Missing token";
+            }
+            Claims claims = tokenService.validateAndGetClaims(token);
+            System.out.println("Token validation successful for user : " + claims.getSubject());
+        } catch (IllegalArgumentException e){
+            return "Error : " + e.getMessage();
+        }
+        // 2. 파라미터에서 상품 ID(productIndex) 추출
+        String productIndexStr = params.get("productIndex");
+        if (productIndexStr == null || productIndexStr.isBlank()) {
+            return "Error:productIndex 데이터가 없습니다.";
+        }
+        // 3. DB에서 특정 ID의 상품 조회
+        try {
+            Long productId = Long.parseLong(productIndexStr);
 
-    @Transactional(readOnly = true) // 데이터를 읽기만 하는 메소드이므로 readOnly=true로 성능 최적화
+            // JpaRepository의 findById 기능을 사용하여 상품을 찾음.
+            // Optional<Product>는 상품이 있을 수도, 없을 수도 있다는 의미.
+            return productRepository.findById(productId)
+                    .map(product -> {
+                        // 상품을 찾았을 경우, 이름과 이미지 URL을 조합하여 반환
+                        System.out.println("상품 조회 성공: ID " + productId);
+                        String responseData = String.join(",", product.getName(), product.getImageUrl());
+                        return "OK:" + responseData;
+                    })
+                    .orElseGet(() -> {
+                        // 상품을 찾지 못했을 경우, 에러 메시지 반환
+                        System.out.println("상품 조회 실패: ID " + productId + " 없음");
+                        return "Error:해당 ID의 상품을 찾을 수 없습니다: " + productId;
+                    });
+
+        } catch (NumberFormatException e) {
+            return "Error:productIndex는 숫자여야 합니다.";
+        }
+    }
+        @Transactional(readOnly = true) // 데이터를 읽기만 하는 메소드이므로 readOnly=true로 성능 최적화
     public String searchProducts(Map<String, String> params, String token) {
         System.out.println("SearchProducts() 호출 됨 (DB 연동 버전)");
         System.out.println("params : " + params);
