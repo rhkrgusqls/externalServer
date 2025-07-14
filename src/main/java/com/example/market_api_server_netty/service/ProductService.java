@@ -25,7 +25,7 @@ public class ProductService {
         this.tokenService = tokenService;
         this.productRepository = productRepository;
     }
-    @Transactional
+    @Transactional(readOnly = true)
     public String getProductDetails(Map<String, String> params, String token){
         System.out.println("getProductDetails() 호출됨 (DB연동 버전)");
         try{
