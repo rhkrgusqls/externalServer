@@ -2,6 +2,8 @@ package com.example.market_api_server_netty.handler;
 
 import com.example.market_api_server_netty.service.MarketDataService;
 import com.example.market_api_server_netty.service.ProductService;
+import com.example.market_api_server_netty.service.AuthService;
+import com.example.market_api_server_netty.service.TokenService;
 import com.example.market_api_server_netty.util.BeanUtil;
 
 import io.netty.buffer.ByteBuf;
@@ -57,13 +59,25 @@ public class MyServerHandler extends ChannelInboundHandlerAdapter {
                     responseMessage = accessService.getAccessToken(dataMap);
                     break;
                 case "PRODUCT_SEARCH":
-                    //ProductService 빈을 가져와서 searchProducts 호출
                     ProductService productService = BeanUtil.getBean(ProductService.class);
                     responseMessage = productService.searchProducts(dataMap, token);
                     break;
                 case "SearchData":
                     ProductService detailService = BeanUtil.getBean(ProductService.class);
                     responseMessage = detailService.getProductDetails(dataMap, token);
+                    break;
+                case "LOGIN":
+                    AuthService authService = BeanUtil.getBean(AuthService.class);
+                    boolean loginResult = authService.authenticate(dataMap);
+                    responseMessage = "loginResult%" + (loginResult ? "success" : "fail");
+                    break;
+                case "SAVE_DATA":
+                    ProductService saveService = BeanUtil.getBean(ProductService.class);
+                    responseMessage = saveService.saveData(dataMap, token);
+                    break;
+                case "GET_PUBLIC_KEY":
+                    TokenService tokenService = BeanUtil.getBean(TokenService.class);
+                    responseMessage = "publicKey%" + tokenService.getPublicKey();
                     break;
                 default:
                     responseMessage = "Error : 알수 없는 명령어 입니다. : "+ commandCode;

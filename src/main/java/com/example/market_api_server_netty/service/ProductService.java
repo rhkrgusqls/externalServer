@@ -116,4 +116,9 @@ public class ProductService {
 
         return "OK:" + responseData;
     }
+
+    public String saveData(Map<String, String> params, String token) {
+        // TODO: 실제 저장 로직 구현
+        return "saveResult%success";
+    }
 }

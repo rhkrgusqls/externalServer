@@ -70,4 +70,8 @@ public class TokenService {
             throw new IllegalArgumentException("만료된 토큰 입니다.", e);
         }
     }
+
+    public String getPublicKey() {
+        return "공개키값";
+    }
 }
