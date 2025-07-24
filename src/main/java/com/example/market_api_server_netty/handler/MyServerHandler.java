@@ -4,6 +4,7 @@ import com.example.market_api_server_netty.service.MarketDataService;
 import com.example.market_api_server_netty.service.ProductService;
 import com.example.market_api_server_netty.service.AuthService;
 import com.example.market_api_server_netty.service.TokenService;
+import com.example.market_api_server_netty.service.UserService;
 import com.example.market_api_server_netty.util.BeanUtil;
 
 import io.netty.buffer.ByteBuf;
@@ -78,6 +79,14 @@ public class MyServerHandler extends ChannelInboundHandlerAdapter {
                 case "GET_PUBLIC_KEY":
                     TokenService tokenService = BeanUtil.getBean(TokenService.class);
                     responseMessage = "publicKey%" + tokenService.getPublicKey();
+                    break;
+                case "PROXY_REGISTER":
+                    UserService proxyUserService = BeanUtil.getBean(UserService.class);
+                    responseMessage = proxyUserService.proxyRegister(dataMap);
+                    break;
+                case "USER_REGISTER":
+                    UserService userUserService = BeanUtil.getBean(UserService.class);
+                    responseMessage = userUserService.userRegister(dataMap);
                     break;
                 default:
                     responseMessage = "Error : 알수 없는 명령어 입니다. : "+ commandCode;
